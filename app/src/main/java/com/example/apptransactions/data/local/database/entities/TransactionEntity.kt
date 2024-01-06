@@ -1,9 +1,14 @@
 package com.example.apptransactions.data.local.database.entities
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
 @Entity(tableName = "transactions")
 data class TransactionEntity(
-    @PrimaryKey val receiptId: String,
+    @PrimaryKey(autoGenerate = true)
+    val id: Long = 0,
+    val receiptId: String,
     val rrn: String,
-    val statusCode: String,
-    val statusDescription: String
+    var statusCode: String,
+    var statusDescription: String
 )

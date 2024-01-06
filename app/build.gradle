@@ -1,0 +1,188 @@
+
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'com.google.devtools.ksp' version "$ksp_version"
+    id 'com.google.firebase.crashlytics'
+    id 'kotlin-parcelize'
+    id 'androidx.navigation.safeargs.kotlin'
+    id 'dagger.hilt.android.plugin'
+}
+def composeVersion = "1.2.1"
+def composeCompilerVersion = "1.4.7"
+android {
+        namespace = "com.example.apptransactions"
+        compileSdk = 33
+        defaultConfig {
+            applicationId = "com.example.apptransactions"
+            minSdk = 24
+            targetSdk = 33
+            versionCode = 1
+            versionName = "1.0"
+
+            testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        }
+
+
+
+
+    compileOptions {
+        // Flag to enable support for the new language APIs
+        coreLibraryDesugaringEnabled true
+        // Sets Java compatibility to Java 8
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    // For Kotlin projects
+    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+        kotlinOptions.jvmTarget = "1.8"
+    }
+
+    buildFeatures {
+        viewBinding true
+        dataBinding true
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion composeCompilerVersion
+    }
+
+}
+
+dependencies {
+    def version = "2.4.0"
+    def accompanist_version = "0.25.1"
+    def room_version = "2.5.0"
+    def coilVersion = "2.2.2"
+    def lottieVersion = "6.0.1"
+    def pushNotificationVersion = "1.0.0"
+    def coreTestingVersion = "2.2.0"
+
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+
+    fileTree(dir: 'libs', include: '**/*.aar')
+            .each { File file ->
+                dependencies.add("implementation", [
+                        name: file.name.lastIndexOf('.').with { it != -1 ? file.name[0..<it] : file.name },
+                        ext : 'aar'
+                ])
+            }
+
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'androidx.core:core-ktx:1.8.0'
+    implementation 'androidx.appcompat:appcompat:1.3.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.1'
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+
+    //kotlin courutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
+
+    //Libs for Network
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.11.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.11.0'
+
+    //Lib for Image
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+
+    //Android Libs
+    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.5.1'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.5.1'
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$version"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$version"
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-savedstate:2.4.0'
+    implementation 'androidx.coordinatorlayout:coordinatorlayout:1.1.0'
+    implementation 'androidx.activity:activity-ktx:1.5.0'
+    implementation 'androidx.fragment:fragment-ktx:1.5.2'
+
+    //Libs for Test
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'io.mockk:mockk:1.12.2'
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4'
+    testImplementation("androidx.arch.core:core-testing:$coreTestingVersion")
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+
+
+
+
+    //Libs for Google Map
+    implementation 'com.google.maps.android:maps-compose:2.5.0'
+    implementation 'com.google.android.gms:play-services-maps:18.1.0'
+
+    //Lib for (Work Manager)
+    implementation "androidx.work:work-runtime-ktx:2.7.0"
+
+
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
+
+    //Security from Android JetPack
+    implementation "androidx.security:security-crypto:1.0.0"
+    implementation "com.google.crypto.tink:tink-android:1.8.0" // added to fix bug related to security-crypto
+
+
+    // Android CustomTabs
+    implementation 'androidx.browser:browser:1.3.0'
+
+
+
+    //Dependency injection
+    implementation("com.google.dagger:hilt-android:$hilt_version")
+    kapt("com.google.dagger:hilt-android-compiler:$hilt_version")
+    implementation("androidx.hilt:hilt-navigation-fragment:1.0.0")
+    implementation 'androidx.hilt:hilt-common:1.0.0'
+    implementation 'androidx.hilt:hilt-work:1.0.0'
+
+
+
+    //compose
+    // Integration with activities
+    implementation 'androidx.activity:activity-compose:1.5.1'
+    // Compose Material Design
+    implementation "androidx.compose.material:material:$composeVersion"
+    implementation "androidx.compose.ui:ui-tooling:$composeVersion"
+    implementation("androidx.compose.ui:ui-util:$composeVersion")
+    implementation("androidx.compose.ui:ui:$composeVersion")
+    implementation("androidx.compose.animation:animation-core:$composeVersion")
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0'
+    implementation("com.google.android.material:compose-theme-adapter:$composeVersion")
+    implementation "io.coil-kt:coil-compose:$coilVersion"
+    implementation "io.coil-kt:coil-svg:$coilVersion"
+    implementation "androidx.constraintlayout:constraintlayout-compose:1.0.1"
+    implementation "com.google.accompanist:accompanist-appcompat-theme:$accompanist_version"
+    implementation "com.google.accompanist:accompanist-pager:$accompanist_version"
+    implementation "com.google.accompanist:accompanist-placeholder-material:$accompanist_version"
+    implementation "com.google.accompanist:accompanist-permissions:$accompanist_version"
+    implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanist_version"
+    implementation("androidx.navigation:navigation-compose:2.5.1")
+    implementation 'androidx.compose.foundation:foundation:1.4.0-beta01'
+    // QR
+    implementation("io.github.g0dkar:qrcode-kotlin-android:3.2.0")
+    implementation 'com.facebook.shimmer:shimmer:0.5.0'
+    // Lottie
+    implementation "com.airbnb.android:lottie:$lottieVersion"
+    implementation "com.airbnb.android:lottie-compose:$lottieVersion"
+
+    // Room
+    implementation("androidx.room:room-runtime:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
+    ksp("androidx.room:room-compiler:$room_version")
+
+    // optional - Kotlin Extensions and Coroutines support for Room
+    implementation("androidx.room:room-ktx:$room_version")
+
+    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.13.0'
+}
+
+
+kapt {
+    correctErrorTypes = true
+}
