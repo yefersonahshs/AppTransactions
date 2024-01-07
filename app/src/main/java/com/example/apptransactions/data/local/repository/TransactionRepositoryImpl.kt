@@ -1,45 +1,49 @@
 package com.example.apptransactions.data.local.repository
-
 import com.example.apptransactions.data.TransactionRepository
+import com.example.apptransactions.data.api.ApiService
 import com.example.apptransactions.data.local.database.dao.TransactionDao
 import com.example.apptransactions.data.local.database.entities.TransactionEntity
-import com.example.apptransactions.domain.model.Transaction
+import com.example.apptransactions.data.model.CancelRequest
+import com.example.apptransactions.data.model.TransactionModel
+import com.example.apptransactions.data.model.TransactionResponse
 
+class TransactionRepositoryImpl(
+    private val transactionDao: TransactionDao,
+    private val apiService: ApiService
+) : TransactionRepository {
 
-class TransactionRepositoryImpl(private val transactionDao: TransactionDao) :
-    TransactionRepository {
-    override suspend fun authorizeTransaction(transaction: Transaction): Transaction {
+    override suspend fun authorizeTransaction(transaction: TransactionModel): TransactionResponse {
+        val response = apiService.authorizeTransaction(transaction)
+
         val entity = TransactionEntity(
-            receiptId = "123",
-            rrn = "456",
-            statusCode = "00",
-            statusDescription = "Aprobada"
+            receiptId = response.receiptId,
+            rrn = response.rrn,
+            statusCode = response.statusCode,
+            statusDescription = response.statusDescription
         )
         transactionDao.insertTransaction(entity)
-        return entity.toTransactionModel()
+
+        return response
     }
 
-    override suspend fun cancelTransaction(receiptId: String, rrn: String): Transaction {
-        val entity = transactionDao.getTransactionByReceiptId(receiptId)
-        if (entity != null && entity.statusCode == "00") {
-            entity.statusCode = "99"
-            entity.statusDescription = "Anulada"
-            transactionDao.updateTransaction(entity)
-            return entity.toTransactionModel()
-        } else {
-            throw Exception("No se puede anular la transacción")
-        }
+    override suspend fun cancelTransaction(receiptId: String, rrn: String): TransactionResponse {
+        val cancelRequest = CancelRequest(receiptId, rrn)
+        val response = apiService.cancelTransaction(cancelRequest)
+
+       // transactionDao.updateTransaction(entity)
+
+        return response
     }
 
-    override suspend fun getAllTransactions(): List<Transaction> {
+    override suspend fun getAllTransactions(): List<TransactionResponse> {
         return transactionDao.getAllTransactions().map { it.toTransactionModel() }
     }
 
-    override suspend fun getTransactionByReceiptId(receiptId: String): Transaction? {
+    override suspend fun getTransactionByReceiptId(receiptId: String): TransactionResponse? {
         return transactionDao.getTransactionByReceiptId(receiptId)?.toTransactionModel()
     }
 
-    private fun TransactionEntity.toTransactionModel(): Transaction {
-        return Transaction(receiptId, rrn, statusCode, statusDescription)
+    private fun TransactionEntity.toTransactionModel(): TransactionResponse {
+        return TransactionResponse(receiptId, rrn, statusCode, statusDescription)
     }
 }

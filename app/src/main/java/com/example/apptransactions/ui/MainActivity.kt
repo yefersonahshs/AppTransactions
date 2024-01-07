@@ -6,6 +6,13 @@ import android.view.LayoutInflater
 import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.navigateUp
 import com.example.apptransactions.R
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.HiltAndroidApp
@@ -18,38 +25,29 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var viewModel: MainViewModel
 
+    private lateinit var navController: NavController
+    private lateinit var appBarConfig: AppBarConfiguration
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        fragmentContainer = findViewById(R.id.fragmentContainer)
 
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.fragmentContainer) as NavHostFragment
+        navController = navHostFragment.navController
 
-        loadAuthorizationForm()
+        appBarConfig = AppBarConfiguration(navController.graph)
+
+        setSupportActionBar(findViewById(R.id.toolbar))
+
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfig)
     }
 
-    private fun loadAuthorizationForm() {
-        fragmentContainer.removeAllViews()
-        val authorizationForm = LayoutInflater.from(this).inflate(R.layout.fragment_authorization, fragmentContainer, false)
-        fragmentContainer.addView(authorizationForm)
-    }
-
-    private fun loadTransactionList() {
-        fragmentContainer.removeAllViews()
-        val transactionList = LayoutInflater.from(this).inflate(R.layout.fragment_transaction_list, fragmentContainer, false)
-        fragmentContainer.addView(transactionList)
-    }
-
-    private fun loadTransactionDetail() {
-        fragmentContainer.removeAllViews()
-        val transactionDetail = LayoutInflater.from(this).inflate(R.layout.fragment_transaction_detail, fragmentContainer, false)
-        fragmentContainer.addView(transactionDetail)
-    }
-
-    private fun loadSearchTransaction() {
-        fragmentContainer.removeAllViews()
-        val searchTransaction = LayoutInflater.from(this).inflate(R.layout.fragment_search_transaction, fragmentContainer, false)
-        fragmentContainer.addView(searchTransaction)
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp(appBarConfig) || super.onSupportNavigateUp()
     }
 }
+
+
+

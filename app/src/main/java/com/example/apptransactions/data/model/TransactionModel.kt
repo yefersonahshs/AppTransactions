@@ -16,17 +16,5 @@ data class TransactionModel(
     val amount: String,
 
     @SerializedName("card")
-    val card: String,
-
-    @SerializedName("receiptId")
-    val receiptId: String,
-
-    @SerializedName("rrn")
-    val rrn: String,
-
-    @SerializedName("statusCode")
-    val statusCode: String,
-
-    @SerializedName("statusDescription")
-    val statusDescription: String
+    val card: String
 )

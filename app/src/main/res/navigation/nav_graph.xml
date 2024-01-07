@@ -1,0 +1,43 @@
+<!-- res/navigation/nav_graph.xml -->
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/authorizationFragment">
+
+    <fragment
+        android:id="@+id/authorizationFragment"
+        android:name="com.example.apptransactions.ui.AuthorizationFragment"
+        android:label="AuthorizationFragment"
+        tools:layout="@layout/fragment_authorization" >
+        <action
+            android:id="@+id/action_authorizationFragment_to_transactionListFragment"
+            app:destination="@id/transactionListFragment" />
+        <action
+            android:id="@+id/action_authorizationFragment_to_searchTransactionFragment"
+            app:destination="@id/searchTransactionFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/transactionListFragment"
+        android:name="com.example.apptransactions.ui.TransactionListFragment"
+        android:label="TransactionListFragment"
+        tools:layout="@layout/fragment_transaction_list" >
+        <action
+            android:id="@+id/action_transactionListFragment_to_transactionDetailFragment"
+            app:destination="@id/transactionDetailFragment">
+        </action>
+    </fragment>
+    <fragment
+        android:id="@+id/transactionDetailFragment"
+        android:name="com.example.apptransactions.ui.TransactionDetailFragment"
+        android:label="TransactionDetailFragment"
+        tools:layout="@layout/fragment_transaction_detail" />
+
+    <fragment
+        android:id="@+id/searchTransactionFragment"
+        android:name="com.example.apptransactions.ui.SearchTransactionFragment"
+        android:label="SearchTransactionFragment"
+        tools:layout="@layout/fragment_search_transaction" />
+
+</navigation>

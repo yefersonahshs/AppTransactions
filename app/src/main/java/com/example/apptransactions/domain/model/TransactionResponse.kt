@@ -1,6 +1,6 @@
 package com.example.apptransactions.domain.model
 
-data class Transaction(
+data class TransactionResponse(
     val receiptId: String,
     val rrn: String,
     val statusCode: String,

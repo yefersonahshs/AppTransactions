@@ -3,6 +3,7 @@ package com.example.apptransactions.di
 import android.content.Context
 import androidx.room.Room
 import com.example.apptransactions.data.TransactionRepository
+import com.example.apptransactions.data.api.ApiService
 import com.example.apptransactions.data.local.database.AppDatabase
 import com.example.apptransactions.data.local.database.dao.TransactionDao
 import com.example.apptransactions.data.local.repository.TransactionRepositoryImpl
@@ -15,7 +16,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object AppModule {
+object AppModule{
 
     @Provides
     @Singleton
@@ -35,8 +36,10 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideTransactionRepository(transactionDao: TransactionDao): TransactionRepository {
-        return TransactionRepositoryImpl(transactionDao)
+    fun provideTransactionRepository(
+        transactionDao: TransactionDao,
+        apiService: ApiService
+    ): TransactionRepository {
+        return TransactionRepositoryImpl(transactionDao, apiService)
     }
-
 }

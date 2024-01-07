@@ -36,4 +36,9 @@
         android:layout_height="wrap_content"
         android:text="Autorizar" />
 
+    <Button
+        android:id="@+id/btnList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Transacciones Aprobadas" />
 </LinearLayout>
