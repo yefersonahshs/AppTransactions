@@ -35,6 +35,12 @@ class MainViewModel @Inject constructor(
     private val _message = MutableLiveData<String?>()
     val message: MutableLiveData<String?> get() = _message
 
+    var transactionClick: TransactionResponse? = null
+
+
+    fun clearSearch() {
+        _searchResult.value = null
+    }
 
     fun authorizeTransaction(transaction: TransactionModel) {
         viewModelScope.launch {
@@ -62,7 +68,9 @@ class MainViewModel @Inject constructor(
 
     fun getAllTransactions() {
         viewModelScope.launch {
-            _transactions.value = getAllTransactionsUseCase()
+            if (_searchResult.value == null) {
+                _transactions.value = getAllTransactionsUseCase()
+            }
         }
     }
 
@@ -70,7 +78,8 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             val result = getTransactionByReceiptIdUseCase(receiptId)
             _searchResult.postValue(result)
-         }
+            clearSearch()
         }
     }
+}
 

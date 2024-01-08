@@ -15,10 +15,11 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class TransactionListFragment : Fragment() {
 
-    private val viewModel: MainViewModel by viewModels()
+    private val viewModel: MainViewModel by viewModels({ requireActivity() })
 
     private var _binding: FragmentTransactionListBinding? = null
     private val binding get() = _binding!!
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,27 +33,19 @@ class TransactionListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-        val recyclerView = binding.recyclerViewTransactions
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-
-        val searchView = binding.searchView
-
-        val adapter = TransactionAdapter { transaction ->
-            val action =
-                TransactionListFragmentDirections.actionTransactionListFragmentToTransactionDetailFragment()
-            findNavController().navigate(action)
-        }
-
-
-        recyclerView.adapter = adapter
+        val (searchView, adapter) = initBindingComponents()
 
         viewModel.getAllTransactions()
-
         viewModel.transactions.observe(viewLifecycleOwner) { transactions ->
             adapter.submitList(transactions)
         }
+        setOnQueryTextListener(searchView)
+        viewModel.searchResult.observe(viewLifecycleOwner) { result ->
+            adapter.submitList(result?.let { listOf(it) } ?: emptyList())
+        }
+    }
 
+    private fun setOnQueryTextListener(searchView: SearchView) {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 query?.let { viewModel.searchTransactionByReceiptId(it) }
@@ -60,18 +53,40 @@ class TransactionListFragment : Fragment() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                newText?.let { viewModel.searchTransactionByReceiptId(it) }
+                if (newText.isNullOrBlank()) {
+                    viewModel.clearSearch()
+                    viewModel.getAllTransactions()
+                } else {
+                    newText?.let { viewModel.searchTransactionByReceiptId(it) }
+                }
                 return true
             }
         })
+    }
 
-        viewModel.searchResult.observe(viewLifecycleOwner) { result ->
-            adapter.submitList(result?.let { listOf(it) } ?: emptyList())
+    private fun initBindingComponents(): Pair<SearchView, TransactionAdapter> {
+        val recyclerView = binding.recyclerViewTransactions
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        val searchView = binding.searchView
+        val adapter = TransactionAdapter { transaction ->
+            viewModel.transactionClick = transaction
+            val action =
+                TransactionListFragmentDirections.actionTransactionListFragmentToTransactionDetailFragment()
+            findNavController().navigate(action)
+
         }
+        recyclerView.adapter = adapter
+        return Pair(searchView, adapter)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.clearSearch()
+        viewModel.getAllTransactions()
     }
 }

@@ -11,7 +11,7 @@ interface ApiService {
     @POST("authorization")
     suspend fun authorizeTransaction(@Body transaction: TransactionModel): TransactionResponse
 
-    @POST("annulation")
+    @POST("annulment")
     suspend fun cancelTransaction(@Body cancelRequest: CancelRequest): TransactionResponse
 
 

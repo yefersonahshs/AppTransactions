@@ -1,14 +1,16 @@
 package com.example.apptransactions.ui
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.apptransactions.data.model.TransactionResponse
 import com.example.apptransactions.databinding.ItemTransactionBinding
 
-class TransactionAdapter(private val onItemClick: (TransactionResponse) -> Unit) :
-    ListAdapter<TransactionResponse, TransactionAdapter.TransactionViewHolder>(TransactionDiffCallback()) {
+class TransactionAdapter(
+    private val onItemClick: (TransactionResponse) -> Unit
+) : ListAdapter<TransactionResponse, TransactionAdapter.TransactionViewHolder>(TransactionDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionViewHolder {
         val binding = ItemTransactionBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -34,6 +36,7 @@ class TransactionAdapter(private val onItemClick: (TransactionResponse) -> Unit)
 
         fun bind(transaction: TransactionResponse) {
             binding.textViewReceiptId.text = transaction.receiptId
+            binding.status.text = transaction.statusDescription
         }
     }
 }

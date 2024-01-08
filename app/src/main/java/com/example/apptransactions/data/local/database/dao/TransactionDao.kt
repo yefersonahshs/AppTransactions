@@ -18,6 +18,6 @@ interface TransactionDao {
     @Update
     suspend fun updateTransaction(transaction: TransactionEntity)
 
-    @Query("SELECT * FROM transactions WHERE receiptId = :receiptId LIMIT 1")
-    suspend fun getTransactionByReceiptId(receiptId: String): TransactionEntity?
+    @Query("SELECT * FROM transactions WHERE receiptId LIKE '%' || :receiptId || '%'")
+    suspend fun getTransactionByReceiptId(receiptId: String): TransactionEntity
 }

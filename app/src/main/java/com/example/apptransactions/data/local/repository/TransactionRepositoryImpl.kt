@@ -29,8 +29,13 @@ class TransactionRepositoryImpl(
     override suspend fun cancelTransaction(receiptId: String, rrn: String): TransactionResponse {
         val cancelRequest = CancelRequest(receiptId, rrn)
         val response = apiService.cancelTransaction(cancelRequest)
+        val existingTransaction = transactionDao.getTransactionByReceiptId(receiptId)
 
-       // transactionDao.updateTransaction(entity)
+        existingTransaction?.apply {
+            statusCode = response.statusCode
+            statusDescription = "Anulada"
+        }
+        existingTransaction?.let { transactionDao.updateTransaction(it) }
 
         return response
     }

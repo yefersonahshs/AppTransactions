@@ -18,7 +18,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class AuthorizationFragment : Fragment() {
 
-    private val viewModel: MainViewModel by viewModels()
+    private val viewModel: MainViewModel by viewModels({ requireActivity() })
 
     private var _binding: FragmentAuthorizationBinding? = null
     private val binding get() = _binding!!
