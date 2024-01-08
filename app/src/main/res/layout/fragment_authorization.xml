@@ -10,13 +10,13 @@
         android:id="@+id/editCommerceCode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Commerce Code" />
+        android:hint="Codigo comercio" />
 
     <EditText
         android:id="@+id/editTerminalCode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Terminal Code" />
+        android:hint="Codigo Terminal " />
 
     <EditText
         android:id="@+id/editAmount"
