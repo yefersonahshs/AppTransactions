@@ -1,4 +1,4 @@
-package com.example.apptransactions.ui
+package com.example.apptransactions.ui.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,6 +10,9 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.apptransactions.databinding.FragmentTransactionListBinding
+import com.example.apptransactions.ui.viewmodel.MainViewModel
+import com.example.apptransactions.ui.TransactionAdapter
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -42,6 +45,9 @@ class TransactionListFragment : Fragment() {
         setOnQueryTextListener(searchView)
         viewModel.searchResult.observe(viewLifecycleOwner) { result ->
             adapter.submitList(result?.let { listOf(it) } ?: emptyList())
+            if (result== null){
+                showTransactionNotFoundSnackbar()
+            }
         }
     }
 
@@ -54,7 +60,6 @@ class TransactionListFragment : Fragment() {
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 if (newText.isNullOrBlank()) {
-                    viewModel.clearSearch()
                     viewModel.getAllTransactions()
                 } else {
                     newText?.let { viewModel.searchTransactionByReceiptId(it) }
@@ -64,6 +69,14 @@ class TransactionListFragment : Fragment() {
         })
     }
 
+
+    private fun showTransactionNotFoundSnackbar() {
+        Snackbar.make(
+            requireView(),
+            "Transacción no encontrada",
+            Snackbar.LENGTH_LONG
+        ).show()
+    }
     private fun initBindingComponents(): Pair<SearchView, TransactionAdapter> {
         val recyclerView = binding.recyclerViewTransactions
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -86,7 +99,6 @@ class TransactionListFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.clearSearch()
         viewModel.getAllTransactions()
     }
 }

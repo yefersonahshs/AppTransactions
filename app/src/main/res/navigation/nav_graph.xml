@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/authorizationFragment"
-        android:name="com.example.apptransactions.ui.AuthorizationFragment"
+        android:name="com.example.apptransactions.ui.fragments.AuthorizationFragment"
         android:label="AuthorizationFragment"
         tools:layout="@layout/fragment_authorization" >
         <action
@@ -20,7 +20,7 @@
 
     <fragment
         android:id="@+id/transactionListFragment"
-        android:name="com.example.apptransactions.ui.TransactionListFragment"
+        android:name="com.example.apptransactions.ui.fragments.TransactionListFragment"
         android:label="TransactionListFragment"
         tools:layout="@layout/fragment_transaction_list" >
         <action
@@ -29,7 +29,7 @@
     </fragment>
     <fragment
         android:id="@+id/transactionDetailFragment"
-        android:name="com.example.apptransactions.ui.TransactionDetailFragment"
+        android:name="com.example.apptransactions.ui.fragments.TransactionDetailFragment"
         android:label="TransactionDetailFragment"
         tools:layout="@layout/fragment_transaction_detail" />
 

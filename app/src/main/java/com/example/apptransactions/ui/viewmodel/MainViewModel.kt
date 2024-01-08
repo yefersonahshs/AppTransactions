@@ -1,4 +1,4 @@
-package com.example.apptransactions.ui
+package com.example.apptransactions.ui.viewmodel
 
 import android.app.AlertDialog
 import androidx.lifecycle.LiveData
@@ -38,16 +38,12 @@ class MainViewModel @Inject constructor(
     var transactionClick: TransactionResponse? = null
 
 
-    fun clearSearch() {
-        _searchResult.value = null
-    }
-
     fun authorizeTransaction(transaction: TransactionModel) {
         viewModelScope.launch {
             try {
                 val result = authorizeTransactionUseCase(transaction)
 
-                if (result.statusCode == "99") {
+                if (result.statusCode != "00") {
                     _isShow.value = true
                     _message.value = result.statusDescription
                 } else {
@@ -68,9 +64,7 @@ class MainViewModel @Inject constructor(
 
     fun getAllTransactions() {
         viewModelScope.launch {
-            if (_searchResult.value == null) {
                 _transactions.value = getAllTransactionsUseCase()
-            }
         }
     }
 
@@ -78,7 +72,6 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             val result = getTransactionByReceiptIdUseCase(receiptId)
             _searchResult.postValue(result)
-            clearSearch()
         }
     }
 }
